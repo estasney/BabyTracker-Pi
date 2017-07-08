@@ -1,4 +1,4 @@
-/.idea
+\.idea
 *.pkl
 *.txt.bak
 *.txt.dat
