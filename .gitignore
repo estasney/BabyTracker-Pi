@@ -1,0 +1,11 @@
+.idea
+*.pkl
+*.txt.bak
+*.txt.dat
+*.txt.dir
+*.p
+*.xml
+ignore.gitignore
+
+
+

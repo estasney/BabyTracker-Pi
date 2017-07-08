@@ -1,0 +1,131 @@
+<pop>:
+    Accordion:
+        id: nav
+        AccordionItem:
+            title: "Hunter's Stats"
+            GridLayout:
+                cols: 2
+                Label:
+                    text: "Diaper Changes"
+                    font_size: 35
+                Label:
+                    text: "Feedings"
+                    font_size: 35
+                Label:
+                    id: diapers
+                    text : "0"
+                    font_size: 45
+                Label:
+                    id: feedings
+                    text : "0"
+                    font_size: 45
+
+        AccordionItem:
+            title: "Infant Cries"
+            GridLayout:
+                cols: 1
+                padding: 10
+                spacing: 15
+                Button:
+                    text: "Eair"
+                    on_release: root.info_pop(indicator=self.text, labelhint="A deeper sound that comes from the abdomen, which indicates discomfort from gas. You should also look for Kickin\' Chicken Syndrome")
+                Button:
+                    text: "Eh"
+                    on_release: root.info_pop(indicator=self.text, labelhint="Don't confuse this one with \"Neh\". Listen for a very short \'Eh\'")
+                Button:
+                    text: "Heh"
+                    on_release: root.info_pop(indicator=self.text, labelhint="Listen for the \"H\" as it sounds similar to \"Eh\" and \"Heh\". This means general discomfort")
+                Button:
+                    text: "Neh"
+                    on_release: root.info_pop(indicator=self.text, labelhint="This is the \"Hungry\" cry.")
+                Button:
+                    text: "Owh"
+                    on_release: root.info_pop(indicator=self.text, labelhint="Hunter needs to go to sleep. May sound similar to \"WAAAH\". May increase with intensity. Also, if he looks away from you, he's probably tired")
+
+
+        AccordionItem:
+            title: "Feeding"
+            AnchorLayout:
+                anchor_x:'center'
+                GridLayout:
+                    cols: 3
+                    row_force_default: True
+                    row_default_height: 75
+                    padding:15
+                    spacing:10
+                    Button:
+                        text: "Start Right Breast"
+                        on_release: root.logitopen(entrycontent=self.text)
+                        on_parent: root.tallycount(target=feedings, pname = "feedings.pkl", tallybool=False)
+                        on_press: root.show_it(indicator="Right Breast")
+                        on_press: root.getthetime(indicator="Right Breast",target=feedtime, pname='feed_time.pkl')
+                        on_press: root.tallycount(target=feedings, pname = "feedings.pkl")
+                    Button:
+                        text: "Start Left Breast"
+                        on_release: root.logitopen(entrycontent=self.text)
+                        on_press: root.show_it(indicator="Left Breast")
+                        on_press: root.getthetime(indicator="Left Breast",target=feedtime, pname='feed_time.pkl')
+                        on_press: root.tallycount(target=feedings, pname = "feedings.pkl")
+                    Button:
+                        text: "Start Bottle"
+                        on_release: root.logitopen(entrycontent=self.text)
+                        on_press: root.show_it(indicator="Bottle")
+                        on_press: root.getthetime(indicator="Bottle",target=feedtime)
+                        on_press: root.tallycount(target=feedings, pname = "feedings.pkl")
+                FloatLayout:
+
+                    Label:
+                        text: "Last Feeding Was:"
+                        pos_hint:{'x':0,'y':0}
+                        font_size: 20
+
+                    Label:
+                        id: feedtime
+                        on_parent: root.load_history(pname='feed_time.pkl', target=feedtime)
+                        pos_hint:{'x':0,'y':-.1}
+                        font_size: 20
+
+                    Label:
+                        text: app.time
+                        pos_hint:{'x':0.4,'y':-0.4}
+
+        AccordionItem:
+            title: "Changing"
+            AnchorLayout:
+                anchor_x:'center'
+                GridLayout:
+                    cols: 1
+                    row_force_default: True
+                    row_default_height: 75
+                    padding:15
+                    spacing:10
+                    Button:
+                        text: "Diaper Change - Pee"
+                        on_release: root.logitopen(entrycontent=self.text)
+                        on_parent: root.tallycount(target=diapers, pname = "diapers.pkl", tallybool=False)
+                        on_press: root.getthetime(indicator="Pee Diaper",target=changetime, pname='change_time.pkl')
+                        on_press: root.tallycount(target=diapers, pname= "diapers.pkl")
+                    Button:
+                        text: "Diaper Change - Poop"
+                        on_release: root.logitopen(entrycontent=self.text)
+                        on_press: root.getthetime(indicator="Poop Diaper",target=changetime, pname='change_time.pkl')
+                        on_press: root.tallycount(target=diapers, pname= "diapers.pkl")
+                    Button:
+                        text: "Diaper Change - Pee and Poop"
+                        on_release: root.logitopen(entrycontent=self.text)
+                        on_press: root.getthetime(indicator="Peepee Poopoo Special", target=changetime, pname='change_time.pkl')
+                        on_press: root.tallycount(target=diapers, pname= "diapers.pkl")
+                FloatLayout:
+                    Label:
+                        text: "Last Diaper Change Was:"
+                        pos_hint:{'x':0,'y':-.1}
+                        font_size: 20
+                    Label:
+                        id: changetime
+                        on_parent: root.load_history(pname='change_time.pkl', target=changetime)
+                        pos_hint:{'x':0,'y':-.2}
+                        font_size: 20
+                        text: ""
+                    Label:
+                        text: app.time
+                        pos_hint:{'x':0.4,'y':-0.4}
