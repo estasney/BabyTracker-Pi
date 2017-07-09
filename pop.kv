@@ -28,19 +28,19 @@
                 spacing: 15
                 Button:
                     text: "Eair"
-                    on_release: root.info_pop(indicator=self.text, labelhint="A deeper sound that comes from the abdomen, which indicates discomfort from gas. You should also look for Kickin\' Chicken Syndrome")
+                    on_release: root.info_popup_maker(indicator=self.text, label_hint="A deeper sound that comes from the abdomen, which indicates discomfort from gas. You should also look for Kickin\' Chicken Syndrome")
                 Button:
                     text: "Eh"
-                    on_release: root.info_pop(indicator=self.text, labelhint="Don't confuse this one with \"Neh\". Listen for a very short \'Eh\'")
+                    on_release: root.info_popup_maker(indicator=self.text, label_hint="Don't confuse this one with \"Neh\". Listen for a very short \'Eh\'")
                 Button:
                     text: "Heh"
-                    on_release: root.info_pop(indicator=self.text, labelhint="Listen for the \"H\" as it sounds similar to \"Eh\" and \"Heh\". This means general discomfort")
+                    on_release: root.info_popup_maker(indicator=self.text, label_hint="Listen for the \"H\" as it sounds similar to \"Eh\" and \"Heh\". This means general discomfort")
                 Button:
                     text: "Neh"
-                    on_release: root.info_pop(indicator=self.text, labelhint="This is the \"Hungry\" cry.")
+                    on_release: root.info_popup_maker(indicator=self.text, label_hint="This is the \"Hungry\" cry.")
                 Button:
                     text: "Owh"
-                    on_release: root.info_pop(indicator=self.text, labelhint="Hunter needs to go to sleep. May sound similar to \"WAAAH\". May increase with intensity. Also, if he looks away from you, he's probably tired")
+                    on_release: root.info_popup_maker(indicator=self.text, label_hint="Hunter needs to go to sleep. May sound similar to \"WAAAH\". May increase with intensity. Also, if he looks away from you, he's probably tired")
 
 
         AccordionItem:
@@ -55,23 +55,23 @@
                     spacing:10
                     Button:
                         text: "Start Right Breast"
-                        on_release: root.logitopen(entrycontent=self.text)
-                        on_parent: root.tallycount(target=feedings, pname = "feedings.pkl", tallybool=False)
+                        on_release: root.open_popup_post_request(entry_content=self.text)
+                        on_parent: root.tally_count(target=feedings, pickle_file_name = "feedings.pkl", tallybool=False)
                         on_press: root.show_it(indicator="Right Breast")
-                        on_press: root.getthetime(indicator="Right Breast",target=feedtime, pname='feed_time.pkl')
-                        on_press: root.tallycount(target=feedings, pname = "feedings.pkl")
+                        on_press: root.get_the_time(indicator="Right Breast",target=feedtime, pickle_file_name='feed_time.pkl')
+                        on_press: root.tally_count(target=feedings, pickle_file_name = "feedings.pkl")
                     Button:
                         text: "Start Left Breast"
-                        on_release: root.logitopen(entrycontent=self.text)
+                        on_release: root.open_popup_post_request(entry_content=self.text)
                         on_press: root.show_it(indicator="Left Breast")
-                        on_press: root.getthetime(indicator="Left Breast",target=feedtime, pname='feed_time.pkl')
-                        on_press: root.tallycount(target=feedings, pname = "feedings.pkl")
+                        on_press: root.get_the_time(indicator="Left Breast",target=feedtime, pickle_file_name='feed_time.pkl')
+                        on_press: root.tally_count(target=feedings, pickle_file_name = "feedings.pkl")
                     Button:
                         text: "Start Bottle"
-                        on_release: root.logitopen(entrycontent=self.text)
+                        on_release: root.open_popup_post_request(entry_content=self.text)
                         on_press: root.show_it(indicator="Bottle")
-                        on_press: root.getthetime(indicator="Bottle",target=feedtime)
-                        on_press: root.tallycount(target=feedings, pname = "feedings.pkl")
+                        on_press: root.get_the_time(indicator="Bottle",target=feedtime, pickle_file_name='feed_time.pkl')
+                        on_press: root.tally_count(target=feedings, pickle_file_name = "feedings.pkl")
                 FloatLayout:
 
                     Label:
@@ -81,7 +81,7 @@
 
                     Label:
                         id: feedtime
-                        on_parent: root.load_history(pname='feed_time.pkl', target=feedtime)
+                        on_parent: root.load_history(pickle_file_name='feed_time.pkl', target=feedtime)
                         pos_hint:{'x':0,'y':-.1}
                         font_size: 20
 
@@ -101,20 +101,20 @@
                     spacing:10
                     Button:
                         text: "Diaper Change - Pee"
-                        on_release: root.logitopen(entrycontent=self.text)
-                        on_parent: root.tallycount(target=diapers, pname = "diapers.pkl", tallybool=False)
-                        on_press: root.getthetime(indicator="Pee Diaper",target=changetime, pname='change_time.pkl')
-                        on_press: root.tallycount(target=diapers, pname= "diapers.pkl")
+                        on_release: root.open_popup_post_request(entry_content=self.text)
+                        on_parent: root.tally_count(target=diapers, pickle_file_name = "diapers.pkl", tallybool=False)
+                        on_press: root.get_the_time(indicator="Pee Diaper",target=changetime, pickle_file_name='change_time.pkl')
+                        on_press: root.tally_count(target=diapers, pickle_file_name= "diapers.pkl")
                     Button:
                         text: "Diaper Change - Poop"
-                        on_release: root.logitopen(entrycontent=self.text)
-                        on_press: root.getthetime(indicator="Poop Diaper",target=changetime, pname='change_time.pkl')
-                        on_press: root.tallycount(target=diapers, pname= "diapers.pkl")
+                        on_release: root.open_popup_post_request(entry_content=self.text)
+                        on_press: root.get_the_time(indicator="Poop Diaper",target=changetime, pickle_file_name='change_time.pkl')
+                        on_press: root.tally_count(target=diapers, pickle_file_name= "diapers.pkl")
                     Button:
                         text: "Diaper Change - Pee and Poop"
-                        on_release: root.logitopen(entrycontent=self.text)
-                        on_press: root.getthetime(indicator="Peepee Poopoo Special", target=changetime, pname='change_time.pkl')
-                        on_press: root.tallycount(target=diapers, pname= "diapers.pkl")
+                        on_release: root.open_popup_post_request(entry_content=self.text)
+                        on_press: root.get_the_time(indicator="Peepee Poopoo Special", target=changetime, pickle_file_name='change_time.pkl')
+                        on_press: root.tally_count(target=diapers, pickle_file_name= "diapers.pkl")
                 FloatLayout:
                     Label:
                         text: "Last Diaper Change Was:"
@@ -122,7 +122,7 @@
                         font_size: 20
                     Label:
                         id: changetime
-                        on_parent: root.load_history(pname='change_time.pkl', target=changetime)
+                        on_parent: root.load_history(pickle_file_name='change_time.pkl', target=changetime)
                         pos_hint:{'x':0,'y':-.2}
                         font_size: 20
                         text: ""

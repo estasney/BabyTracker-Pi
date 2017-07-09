@@ -20,23 +20,23 @@ entryid = 'entry.1403445275'
 
 class pop(BoxLayout):
 
-    def logitclose(self, instance):
-        params = GoogleForms.paramsbuilder(entryid=entryid, entrycontent=self.but.text)
-        GoogleForms.postgoogleform(form_url, params)
+    def close_popup_post_request(self, instance):
+        params = GoogleForms.params_builder(entry_id=entryid, entry_content=self.but.text)
+        GoogleForms.post_google_form(form_url, params)
         self.main_pop.dismiss()
 
-    def logitopen(self, entrycontent):
-        params = GoogleForms.paramsbuilder(entryid=entryid, entrycontent=entrycontent)
-        GoogleForms.postgoogleform(form_url, params)
+    def open_popup_post_request(self, entry_content):
+        params = GoogleForms.params_builder(entry_id=entryid, entry_content=entry_content)
+        GoogleForms.post_google_form(form_url, params)
 
-    def closeitinfo(self, instance):
+    def close_popup(self, instance):
         self.info_popup.dismiss()
 
-    def info_pop(self, indicator, labelhint):
+    def info_popup_maker(self, indicator, label_hint):
 
         self.box = FloatLayout()
 
-        self.lab = Label(text=labelhint,max_lines=3, text_size=(400,250), valign='middle', halign='center', pos_hint= {'x':0,'y':.35} )
+        self.lab = Label(text=label_hint, max_lines=3, text_size=(400, 250), valign='middle', halign='center', pos_hint= {'x':0, 'y':.35})
 
         self.but = Button(text="Close", size_hint=(1, .2), pos_hint={'x': 0, 'y': 0})
 
@@ -47,7 +47,7 @@ class pop(BoxLayout):
         self.info_popup = Popup(title=indicator + " Cry", content=self.box, size_hint=(None, None), size=(450, 300)
                                 , auto_dismiss=False, title_size=15)
 
-        self.but.bind(on_release=self.closeitinfo)
+        self.but.bind(on_release=self.close_popup)
 
         self.info_popup.open()
 
@@ -66,23 +66,22 @@ class pop(BoxLayout):
         self.main_pop = Popup(title=indicator + " Feeding", content=self.box,
                               size_hint=(None, None), size=(450, 300), auto_dismiss=False, title_size=15)
 
-        self.but.bind(on_release=self.logitclose)
+        self.but.bind(on_release=self.close_popup_post_request)
 
         self.main_pop.open()
 
-    def getthetime(self, indicator, target, pname):
+    def get_the_time(self, indicator, target, pickle_file_name):
         target.text = indicator + " at " + strftime("%I:%M %p", time.localtime())
         pickle_it = target.text
-        output = open(pname, 'wb')
+        output = open(pickle_file_name, 'wb')
         pickle.dump(pickle_it, output)
         output.close()
 
-    def load_history(self, pname, target):
+    def load_history(self, pickle_file_name, target):
         try:
-            pkl_file = open(pname, 'rb')
+            pkl_file = open(pickle_file_name, 'rb')
             loaded_history = pickle.load(pkl_file)
             target.text = loaded_history
-            print(loaded_history)
         except:
             self.text = ""
 
@@ -91,30 +90,31 @@ class pop(BoxLayout):
     #TODO - Add an elapsed time timer
 
 
-    def tallycount(self, target, pname, tallybool=True):
+    def tally_count(self, target, pickle_file_name, tallybool=True):
         try:
-            pkl_file = open(pname, 'rb')
-            currentCount = pickle.load(pkl_file)
+            pkl_file = open(pickle_file_name, 'rb')
+            current_count = pickle.load(pkl_file)
         except:
-            currentCount = "0"
-            output_e = open(pname, 'wb')
-            pickle.dump(currentCount, output_e)
+            current_count = "0"
+            output_e = open(pickle_file_name, 'wb')
+            pickle.dump(current_count, output_e)
             output_e.close()
-        currentCount = int(currentCount)
-        newCount = str(currentCount + 1)
+        current_count = int(current_count)
+        newCount = str(current_count + 1)
         if tallybool is True:
             target.text = newCount
-            output = open(pname, 'wb')
+            output = open(pickle_file_name, 'wb')
             pickle.dump(newCount, output)
             output.close()
         else:
-            target.text = str(currentCount)
+            target.text = str(current_count)
             return False
-
     pass
+
 
 class PopApp(App):
     time = StringProperty()
+
     def update(self, *args):
         self.time = strftime("%I:%M:%S %p", time.localtime())
 
