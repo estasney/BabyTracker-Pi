@@ -54,17 +54,17 @@
                     padding:15
                     spacing:10
                     Button:
+                        text: "Start Left Breast"
+                        on_release: root.open_popup_post_request(entry_content=self.text)
+                        on_press: root.show_it(indicator="Left Breast")
+                        on_press: root.get_the_time(indicator="Left Breast",target=feedtime, pickle_file_name='feed_time.pkl')
+                        on_press: root.tally_count(target=feedings, pickle_file_name = "feedings.pkl")
+                    Button:
                         text: "Start Right Breast"
                         on_release: root.open_popup_post_request(entry_content=self.text)
                         on_parent: root.tally_count(target=feedings, pickle_file_name = "feedings.pkl", tallybool=False)
                         on_press: root.show_it(indicator="Right Breast")
                         on_press: root.get_the_time(indicator="Right Breast",target=feedtime, pickle_file_name='feed_time.pkl')
-                        on_press: root.tally_count(target=feedings, pickle_file_name = "feedings.pkl")
-                    Button:
-                        text: "Start Left Breast"
-                        on_release: root.open_popup_post_request(entry_content=self.text)
-                        on_press: root.show_it(indicator="Left Breast")
-                        on_press: root.get_the_time(indicator="Left Breast",target=feedtime, pickle_file_name='feed_time.pkl')
                         on_press: root.tally_count(target=feedings, pickle_file_name = "feedings.pkl")
                     Button:
                         text: "Start Bottle"
