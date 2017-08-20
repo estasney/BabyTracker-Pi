@@ -19,7 +19,8 @@ import pickle
 form_url = "https://docs.google.com/forms/d/e/1FAIpQLSc4z-fmhAI9UfJziiv-Bh7yjx1jOFLOxJw77vbFdh5Cd61rjA/formResponse"
 entryid_action = 'entry.1403445275'
 entryid_local_time = 'entry.1513979551'
-backup_csv = 'home/pi/logs/hunter_logs.csv'
+backup_csv = '/home/pi/logs/hunter_logs.csv'
+
 debug_forms = False
 
 class pop(BoxLayout):
