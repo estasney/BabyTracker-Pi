@@ -12,22 +12,29 @@ from kivy.uix.boxlayout import BoxLayout
 import GoogleForms
 import time
 from time import strftime
+from timeit import default_timer as timer
+from datetime import timedelta
 import pickle
 
 form_url = "https://docs.google.com/forms/d/e/1FAIpQLSc4z-fmhAI9UfJziiv-Bh7yjx1jOFLOxJw77vbFdh5Cd61rjA/formResponse"
-entryid = 'entry.1403445275'
-
+entryid_action = 'entry.1403445275'
+entryid_local_time = 'entry.1513979551'
+# backup_csv = 'home/pi/logs/hunter_logs.csv'
+backup_csv = r"C:\Users\erics_qp7a9\Documents\hunter_logs.csv"
+debug_forms = True
 
 class pop(BoxLayout):
 
     def close_popup_post_request(self, instance):
-        params = GoogleForms.params_builder(entry_id=entryid, entry_content=self.but.text)
-        GoogleForms.post_google_form(form_url, params)
+        params = GoogleForms.params_builder(entry_ids=(entryid_action, entryid_local_time),
+                                            entry_contents=(self.but.text, strftime("%I:%M %p", time.localtime())))
+        GoogleForms.post_google_form(form_url, params, backup_csv, debug_forms)
         self.main_pop.dismiss()
 
     def open_popup_post_request(self, entry_content):
-        params = GoogleForms.params_builder(entry_id=entryid, entry_content=entry_content)
-        GoogleForms.post_google_form(form_url, params)
+        params = GoogleForms.params_builder(entry_ids=(entryid_action, entryid_local_time),
+                                            entry_contents=(entry_content, strftime("%I:%M %p", time.localtime())))
+        GoogleForms.post_google_form(form_url, params, backup_csv, debug_forms)
 
     def close_popup(self, instance):
         self.info_popup.dismiss()
@@ -57,9 +64,13 @@ class pop(BoxLayout):
 
         self.lab = Label(text="Feeding " + indicator + " In Progress", font_size=15, pos_hint = {'x':0,'y':.35})
 
+        self.timer_label = Label(text="", font_size=18, pos_hint = {'x':0, 'y':.05})
+
         self.but = Button(text="Complete " + indicator, size_hint = (1,.2), pos_hint = {'x':0,'y':0})
 
         self.box.add_widget(self.lab)
+
+        self.box.add_widget(self.timer_label)
 
         self.box.add_widget(self.but)
 
@@ -68,7 +79,19 @@ class pop(BoxLayout):
 
         self.but.bind(on_release=self.close_popup_post_request)
 
+        self.open_time = str(timer())  # The time that it was opened. Stays persistent
+
+        Clock.schedule_interval(self.elapsed_time, 0.1)
+
         self.main_pop.open()
+
+    def elapsed_time(self, *args):
+        open_time = float(self.open_time)
+        now_time = timer()
+        elapsed_time = round((now_time - open_time), 1)
+        elapsed_time = int(elapsed_time)
+        formatted_time = str(timedelta(seconds=elapsed_time))
+        self.timer_label.text = formatted_time
 
     def get_the_time(self, indicator, target, pickle_file_name):
         target.text = indicator + " at " + strftime("%I:%M %p", time.localtime())
@@ -84,11 +107,6 @@ class pop(BoxLayout):
             target.text = loaded_history
         except:
             self.text = ""
-
-
-
-    #TODO - Add an elapsed time timer
-
 
     def tally_count(self, target, pickle_file_name, tallybool=True):
         try:
