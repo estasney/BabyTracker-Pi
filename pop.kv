@@ -63,13 +63,13 @@
 
                     Label:
                         text: "Last Remedy Was:"
-                        pos_hint:{'x':0,'y':0}
+                        pos_hint:{'x':0,'y':-.2}
                         font_size: 20
 
                     Label:
                         id: remedytime
                         on_parent: root.load_history(pickle_file_name='remedies.pkl', target=remedytime)
-                        pos_hint:{'x':0,'y':-.1}
+                        pos_hint:{'x':0,'y':-.3}
                         font_size: 20
 
                     Label:
