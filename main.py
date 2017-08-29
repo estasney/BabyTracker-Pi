@@ -21,7 +21,7 @@ form_url = "https://docs.google.com/forms/d/e/1FAIpQLSc4z-fmhAI9UfJziiv-Bh7yjx1j
 entryid_action = 'entry.1403445275'
 entryid_local_time = 'entry.1513979551'
 backup_csv = '/home/pi/logs/hunter_logs.csv'
-debug_forms = False
+debug_forms = True
 
 class pop(BoxLayout):
 

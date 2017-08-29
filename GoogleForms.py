@@ -9,20 +9,21 @@ def params_builder(entry_ids, entry_contents):
 
 
 def post_google_form(form_url, params, backup_csv, debug_mode):
-    with open(backup_csv, "a+", encoding='utf-8', newline='') as csv_file:
-        outputwriter = csv.writer(csv_file, dialect='excel')
-        values_to_write = []
-        for key, value in params.items():
-            values_to_write.append(value)
-        outputwriter.writerow(values_to_write)
     if debug_mode is False:
+        with open(backup_csv, "a+", encoding='utf-8', newline='') as csv_file:
+            outputwriter = csv.writer(csv_file, dialect='excel')
+            values_to_write = []
+            for key, value in params.items():
+                values_to_write.append(value)
+            outputwriter.writerow(values_to_write)
+
         try:
             r = requests.post(form_url, data=params, headers={"Content-type": "application/x-www-form-urlencoded"})
             return r.text
         except:
             return "Error Posting To Google"
     else:
-        print("Debug Mode Google")
+        print("Debug Mode, Not Saved to Google or CSV")
 
 
 
