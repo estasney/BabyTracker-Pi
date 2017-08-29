@@ -21,20 +21,20 @@ form_url = "https://docs.google.com/forms/d/e/1FAIpQLSc4z-fmhAI9UfJziiv-Bh7yjx1j
 entryid_action = 'entry.1403445275'
 entryid_local_time = 'entry.1513979551'
 backup_csv = '/home/pi/logs/hunter_logs.csv'
-debug_forms = True
+debug_user = True
 
 class pop(BoxLayout):
 
     def close_popup_post_request(self, instance):
         params = GoogleForms.params_builder(entry_ids=(entryid_action, entryid_local_time),
                                             entry_contents=(self.but.text, strftime("%I:%M %p", time.localtime())))
-        GoogleForms.post_google_form(form_url, params, backup_csv, debug_forms)
+        GoogleForms.post_google_form(form_url, params, backup_csv, debug_user)
         self.main_pop.dismiss()
 
     def open_popup_post_request(self, entry_content):
         params = GoogleForms.params_builder(entry_ids=(entryid_action, entryid_local_time),
                                             entry_contents=(entry_content, strftime("%I:%M %p", time.localtime())))
-        GoogleForms.post_google_form(form_url, params, backup_csv, debug_forms)
+        GoogleForms.post_google_form(form_url, params, backup_csv, debug_user)
 
     def close_popup(self, instance):
         self.info_popup.dismiss()
@@ -78,11 +78,12 @@ class pop(BoxLayout):
 
 
     def get_the_time(self, indicator, target, pickle_file_name):
-        target.text = indicator + " at " + strftime("%I:%M %p", time.localtime())
-        pickle_it = target.text
-        output = open(pickle_file_name, 'wb')
-        pickle.dump(pickle_it, output)
-        output.close()
+        if debug_user is False:
+            target.text = indicator + " at " + strftime("%I:%M %p", time.localtime())
+            pickle_it = target.text
+            output = open(pickle_file_name, 'wb')
+            pickle.dump(pickle_it, output)
+            output.close()
 
     def load_history(self, pickle_file_name, target):
         try:
@@ -93,24 +94,25 @@ class pop(BoxLayout):
             self.text = ""
 
     def tally_count(self, target, pickle_file_name, tallybool=True):
-        try:
-            pkl_file = open(pickle_file_name, 'rb')
-            current_count = pickle.load(pkl_file)
-        except:
-            current_count = "0"
-            output_e = open(pickle_file_name, 'wb')
-            pickle.dump(current_count, output_e)
-            output_e.close()
-        current_count = int(current_count)
-        newCount = str(current_count + 1)
-        if tallybool is True:
-            target.text = newCount
-            output = open(pickle_file_name, 'wb')
-            pickle.dump(newCount, output)
-            output.close()
-        else:
-            target.text = str(current_count)
-            return False
+        if debug_user is False:
+            try:
+                pkl_file = open(pickle_file_name, 'rb')
+                current_count = pickle.load(pkl_file)
+            except:
+                current_count = "0"
+                output_e = open(pickle_file_name, 'wb')
+                pickle.dump(current_count, output_e)
+                output_e.close()
+            current_count = int(current_count)
+            newCount = str(current_count + 1)
+            if tallybool is True:
+                target.text = newCount
+                output = open(pickle_file_name, 'wb')
+                pickle.dump(newCount, output)
+                output.close()
+            else:
+                target.text = str(current_count)
+                return False
     pass
 
 
