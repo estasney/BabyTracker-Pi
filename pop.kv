@@ -34,7 +34,7 @@
                 GridLayout:
                     cols: 1
                     row_force_default: True
-                    row_default_height: 60
+                    row_default_height: 48
                     padding:15
                     spacing:10
 
@@ -57,6 +57,11 @@
                         text: "Windi"
                         on_release: root.open_popup_post_request(entry_content=self.text)
                         on_press: root.get_the_time(indicator="Windi",target=remedytime, pickle_file_name='remedy_time.pkl')
+                        on_press: root.tally_count(target=remedy_count, pickle_file_name= "remedies_count.pkl")
+                    Button:
+                        text: "Tylenol"
+                        on_release: root.open_popup_post_request(entry_content=self.text)
+                        on_press: root.get_the_time(indicator="Tylenol",target=remedytime, pickle_file_name='remedy_time.pkl')
                         on_press: root.tally_count(target=remedy_count, pickle_file_name= "remedies_count.pkl")
 
                 FloatLayout:
