@@ -99,6 +99,7 @@
                         on_press: root.show_it(indicator="Left Breast")
                         on_press: root.get_the_time(indicator="Left Breast",target=feedtime, pickle_file_name='feed_time.pkl')
                         on_press: root.tally_count(target=feedings, pickle_file_name = "feedings.pkl")
+
                     Button:
                         text: "Start Right Breast"
                         on_release: root.open_popup_post_request(entry_content=self.text)
@@ -112,6 +113,9 @@
                         on_press: root.show_it(indicator="Bottle")
                         on_press: root.get_the_time(indicator="Bottle",target=feedtime, pickle_file_name='feed_time.pkl')
                         on_press: root.tally_count(target=feedings, pickle_file_name = "feedings.pkl")
+                        on_press: app.reset_meta_start()
+
+
                 FloatLayout:
 
                     Label:
@@ -128,6 +132,17 @@
                     Label:
                         text: app.time
                         pos_hint:{'x':0.4,'y':-0.4}
+
+                    Label:
+                        id: elapsed_meta_label
+                        text: app.elapsed_meta
+                        pos_hint:{'x':0,'y':-.2}
+                        font_size: 20
+                        markup: app.meta_markup_bool
+
+
+
+
 
         AccordionItem:
             title: "Changing"
