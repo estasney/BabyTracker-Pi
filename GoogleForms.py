@@ -24,11 +24,3 @@ def post_google_form(form_url, params, backup_csv, debug_mode):
             return "Error Posting To Google"
     else:
         print("Debug Mode, Not Saved to Google or CSV")
-
-
-
-
-
-
-
-
