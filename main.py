@@ -21,7 +21,7 @@ form_url = "https://docs.google.com/forms/d/e/1FAIpQLSc4z-fmhAI9UfJziiv-Bh7yjx1j
 entryid_action = 'entry.1403445275'
 entryid_local_time = 'entry.1513979551'
 backup_csv = '/home/pi/logs/hunter_logs.csv'
-debug_user = True
+debug_user = False
 
 class pop(BoxLayout):
 
@@ -91,27 +91,28 @@ class pop(BoxLayout):
             loaded_history = pickle.load(pkl_file)
             target.text = loaded_history
         except:
-            self.text = ""
+            self.text = "No Record Found"
 
-    def tally_count(self, target, pickle_file_name, tallybool=True):
+    def tally_count(self, pickle_file_name, target=None, tallybool=True):
         if debug_user is False:
             try:
                 pkl_file = open(pickle_file_name, 'rb')
                 current_count = pickle.load(pkl_file)
             except:
                 current_count = "0"
-                output_e = open(pickle_file_name, 'wb')
+                output_e = open(pickle_file_name, 'wb+')
                 pickle.dump(current_count, output_e)
                 output_e.close()
             current_count = int(current_count)
             newCount = str(current_count + 1)
-            if tallybool is True:
+            if tallybool is True and target:
                 target.text = newCount
-                output = open(pickle_file_name, 'wb')
+                output = open(pickle_file_name, 'wb+')
                 pickle.dump(newCount, output)
                 output.close()
             else:
-                target.text = str(current_count)
+                if target:
+                    target.text = str(current_count)
                 return False
     pass
 
@@ -160,6 +161,3 @@ class PopApp(App):
         return pop()
 
 PopApp().run()
-
-
-
