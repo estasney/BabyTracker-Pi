@@ -5,7 +5,9 @@
 *.txt.dir
 *.p
 *.xml
-ignore.gitignore
+.gitignore
+*.csv
 
 
 
+/.idea/
