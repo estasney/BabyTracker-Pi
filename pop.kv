@@ -2,30 +2,52 @@
     Accordion:
         id: nav
         AccordionItem:
-            title: "Hunter's Stats"
-            GridLayout:
-                cols: 3
-                Label:
-                    text: "Changes"
-                    font_size: 35
-                Label:
-                    text: "Feedings"
-                    font_size: 35
-                Label:
-                    text: "Remedies"
-                    font_size: 35
-                Label:
-                    id: diapers
-                    text : "0"
-                    font_size: 45
-                Label:
-                    id: feedings
-                    text : "0"
-                    font_size: 45
-                Label:
-                    id: remedy_count
-                    text : "0"
-                    font_size: 45
+            title: "Medicine"
+            AnchorLayout:
+                anchor_x: 'center'
+                GridLayout:
+                    cols: 1
+                    row_force_default: True
+                    row_default_height: 48
+                    padding:15
+                    spacing:10
+
+                    Button:
+                        text: "Tylenol"
+                        on_release: root.open_popup_post_request(entry_content=self.text)
+                        on_press: root.get_the_time(indicator="Tylenol",target=medtime, pickle_file_name='med_time.pkl')
+                        on_press: root.tally_count(pickle_file_name= "med_count.pkl")
+
+                    Button:
+                        text: "Motrin"
+                        on_release: root.open_popup_post_request(entry_content=self.text)
+                        on_press: root.get_the_time(indicator="Motrin",target=medtime, pickle_file_name='med_time.pkl')
+                        on_press: root.tally_count(pickle_file_name= "med_count.pkl")
+
+                    Button:
+                        text: "Antibiotics"
+                        on_release: root.open_popup_post_request(entry_content=self.text)
+                        on_press: root.get_the_time(indicator="Motrin",target=medtime, pickle_file_name='med_time.pkl')
+                        on_press: root.tally_count(pickle_file_name= "med_count.pkl")
+
+
+                FloatLayout:
+
+                    Label:
+                        text: "Last Medication:"
+                        pos_hint:{'x':0,'y':-.2}
+                        font_size: 20
+
+                    Label:
+                        id: medtime
+                        on_parent: root.load_history(pickle_file_name='med_time.pkl', target=medtime)
+                        pos_hint:{'x':0,'y':-.3}
+                        font_size: 20
+
+                    Label:
+                        text: app.time
+                        pos_hint:{'x':0.4,'y':-0.4}
+
 
         AccordionItem:
             title: "Remedies"
@@ -42,27 +64,22 @@
                         text: "Gas Drops"
                         on_release: root.open_popup_post_request(entry_content=self.text)
                         on_press: root.get_the_time(indicator="Mylicon - Gas Drops",target=remedytime, pickle_file_name='remedy_time.pkl')
-                        on_press: root.tally_count(target=remedy_count, pickle_file_name= "remedies_count.pkl")
+                        on_press: root.tally_count(pickle_file_name= "remedies_count.pkl")
                     Button:
                         text: "Gripe Water"
                         on_release: root.open_popup_post_request(entry_content=self.text)
                         on_press: root.get_the_time(indicator="Gripe Water",target=remedytime, pickle_file_name='remedy_time.pkl')
-                        on_press: root.tally_count(target=remedy_count, pickle_file_name= "remedies_count.pkl")
+                        on_press: root.tally_count(pickle_file_name= "remedies_count.pkl")
                     Button:
                         text: "Snot Sucker"
                         on_release: root.open_popup_post_request(entry_content=self.text)
                         on_press: root.get_the_time(indicator="Snot Sucker",target=remedytime, pickle_file_name='remedy_time.pkl')
-                        on_press: root.tally_count(target=remedy_count, pickle_file_name= "remedies_count.pkl")
+                        on_press: root.tally_count(pickle_file_name= "remedies_count.pkl")
                     Button:
                         text: "Windi"
                         on_release: root.open_popup_post_request(entry_content=self.text)
                         on_press: root.get_the_time(indicator="Windi",target=remedytime, pickle_file_name='remedy_time.pkl')
-                        on_press: root.tally_count(target=remedy_count, pickle_file_name= "remedies_count.pkl")
-                    Button:
-                        text: "Tylenol"
-                        on_release: root.open_popup_post_request(entry_content=self.text)
-                        on_press: root.get_the_time(indicator="Tylenol",target=remedytime, pickle_file_name='remedy_time.pkl')
-                        on_press: root.tally_count(target=remedy_count, pickle_file_name= "remedies_count.pkl")
+                        on_press: root.tally_count(pickle_file_name= "remedies_count.pkl")
 
                 FloatLayout:
 
@@ -98,23 +115,23 @@
                         on_release: root.open_popup_post_request(entry_content=self.text)
                         on_press: root.show_it(indicator="Left Breast")
                         on_press: root.get_the_time(indicator="Left Breast",target=feedtime, pickle_file_name='feed_time.pkl')
-                        on_press: root.tally_count(target=feedings, pickle_file_name = "feedings.pkl")
+                        on_press: root.tally_count(pickle_file_name = "feedings.pkl")
                         on_press: app.reset_meta_start()
 
                     Button:
                         text: "Start Right Breast"
                         on_release: root.open_popup_post_request(entry_content=self.text)
-                        on_parent: root.tally_count(target=feedings, pickle_file_name = "feedings.pkl", tallybool=False)
+                        on_parent: root.tally_count(pickle_file_name = "feedings.pkl", tallybool=False)
                         on_press: root.show_it(indicator="Right Breast")
                         on_press: root.get_the_time(indicator="Right Breast",target=feedtime, pickle_file_name='feed_time.pkl')
-                        on_press: root.tally_count(target=feedings, pickle_file_name = "feedings.pkl")
+                        on_press: root.tally_count(pickle_file_name = "feedings.pkl")
                         on_press: app.reset_meta_start()
                     Button:
                         text: "Start Bottle"
                         on_release: root.open_popup_post_request(entry_content=self.text)
                         on_press: root.show_it(indicator="Bottle")
                         on_press: root.get_the_time(indicator="Bottle",target=feedtime, pickle_file_name='feed_time.pkl')
-                        on_press: root.tally_count(target=feedings, pickle_file_name = "feedings.pkl")
+                        on_press: root.tally_count(pickle_file_name = "feedings.pkl")
                         on_press: app.reset_meta_start()
 
 
@@ -159,19 +176,19 @@
                     Button:
                         text: "Diaper Change - Pee"
                         on_release: root.open_popup_post_request(entry_content=self.text)
-                        on_parent: root.tally_count(target=diapers, pickle_file_name = "diapers.pkl", tallybool=False)
+                        on_parent: root.tally_count(pickle_file_name = "diapers.pkl", tallybool=False)
                         on_press: root.get_the_time(indicator="Pee Diaper",target=changetime, pickle_file_name='change_time.pkl')
-                        on_press: root.tally_count(target=diapers, pickle_file_name= "diapers.pkl")
+                        on_press: root.tally_count(pickle_file_name= "diapers.pkl")
                     Button:
                         text: "Diaper Change - Poop"
                         on_release: root.open_popup_post_request(entry_content=self.text)
                         on_press: root.get_the_time(indicator="Poop Diaper",target=changetime, pickle_file_name='change_time.pkl')
-                        on_press: root.tally_count(target=diapers, pickle_file_name= "diapers.pkl")
+                        on_press: root.tally_count(pickle_file_name= "diapers.pkl")
                     Button:
                         text: "Diaper Change - Pee and Poop"
                         on_release: root.open_popup_post_request(entry_content=self.text)
                         on_press: root.get_the_time(indicator="Peepee Poopoo Special", target=changetime, pickle_file_name='change_time.pkl')
-                        on_press: root.tally_count(target=diapers, pickle_file_name= "diapers.pkl")
+                        on_press: root.tally_count(pickle_file_name= "diapers.pkl")
                 FloatLayout:
                     Label:
                         text: "Last Diaper Change Was:"
