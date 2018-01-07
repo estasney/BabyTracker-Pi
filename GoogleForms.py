@@ -8,8 +8,8 @@ def params_builder(entry_ids, entry_contents):
     return param_dict
 
 
-def post_google_form(form_url, params, backup_csv, debug_mode):
-    if debug_mode is False:
+def post_google_form(form_url, params, backup_csv, log_to_google):
+    if log_to_google:
         with open(backup_csv, "a+", encoding='utf-8', newline='') as csv_file:
             outputwriter = csv.writer(csv_file, dialect='excel')
             values_to_write = []
@@ -23,4 +23,4 @@ def post_google_form(form_url, params, backup_csv, debug_mode):
         except:
             return "Error Posting To Google"
     else:
-        print("Debug Mode, Not Saved to Google or CSV")
+        print("Entry Not Logged")

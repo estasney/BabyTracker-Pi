@@ -7,199 +7,148 @@
                 anchor_x: 'center'
                 GridLayout:
                     cols: 1
-                    row_force_default: True
-                    row_default_height: 48
                     padding:15
                     spacing:10
 
-                    Button:
-                        text: "Tylenol"
-                        on_release: root.open_popup_post_request(entry_content=self.text)
-                        on_press: root.get_the_time(indicator="Tylenol",target=medtime, pickle_file_name='med_time.pkl')
-                        on_press: root.tally_count(pickle_file_name= "med_count.pkl")
+                    GridLayout:
+                        cols: 1
+                        padding:5
+                        spacing:5
 
-                    Button:
-                        text: "Motrin"
-                        on_release: root.open_popup_post_request(entry_content=self.text)
-                        on_press: root.get_the_time(indicator="Motrin",target=medtime, pickle_file_name='med_time.pkl')
-                        on_press: root.tally_count(pickle_file_name= "med_count.pkl")
+                        Button:
+                            text: "Tylenol"
+                            font_size:20
+                            on_release: root.post_data_on_open(entry_content=self.text)
+                            on_press: root.get_the_time(indicator=self.text, target=medtime, pickle_file_name='med_time.pkl')
+                            on_press: root.tally_count(pickle_file_name= "med_count.pkl")
+                            on_press: app.update_widget_time(k='medtime')
 
-                    Button:
-                        text: "Antibiotics"
-                        on_release: root.open_popup_post_request(entry_content=self.text)
-                        on_press: root.get_the_time(indicator="Motrin",target=medtime, pickle_file_name='med_time.pkl')
-                        on_press: root.tally_count(pickle_file_name= "med_count.pkl")
+                        Button:
+                            text: "Motrin"
+                            font_size:20
+                            on_release: root.post_data_on_open(entry_content=self.text)
+                            on_press: root.get_the_time(indicator=self.text, target=medtime, pickle_file_name='med_time.pkl')
+                            on_press: root.tally_count(pickle_file_name= "med_count.pkl")
+                            on_press: app.update_widget_time(k='medtime')
 
+                        Button:
+                            text: "Antibiotics"
+                            font_size:20
+                            on_release: root.post_data_on_open(entry_content=self.text)
+                            on_press: root.get_the_time(indicator=self.text, target=medtime, pickle_file_name='med_time.pkl')
+                            on_press: root.tally_count(pickle_file_name= "med_count.pkl")
+                            on_press: app.update_widget_time(k='medtime')
 
-                FloatLayout:
+                    GridLayout:
+                        cols: 1
+                        rows: 2
+                        padding:5
+                        spacing:5
 
-                    Label:
-                        text: "Last Medication:"
-                        pos_hint:{'x':0,'y':-.2}
-                        font_size: 20
+                        GridLayout:
+                            cols: 1
+                            padding:5
+                            spacing:5
 
-                    Label:
-                        id: medtime
-                        on_parent: root.load_history(pickle_file_name='med_time.pkl', target=medtime)
-                        pos_hint:{'x':0,'y':-.3}
-                        font_size: 20
+                            Label:
+                                text: "Last Medication:"
+                                font_size: 20
 
-                    Label:
-                        text: app.time
-                        pos_hint:{'x':0.4,'y':-0.4}
+                            Label:
+                                id: medtime
+                                font_size: 20
+                                on_parent: root.load_history(pickle_file_name='med_time.pkl', target=medtime)
 
+                            Label:
+                                id: elapsed_meta_label
+                                font_size: 20
+                                text: app.widget_elapsed_times['medtime']
+                                markup: app.meta_markup_bool
 
-        AccordionItem:
-            title: "Remedies"
-            AnchorLayout:
-                anchor_x:'center'
-                GridLayout:
-                    cols: 1
-                    row_force_default: True
-                    row_default_height: 48
-                    padding:15
-                    spacing:10
+                        GridLayout:
+                            cols: 3
+                            padding:5
+                            spacing:5
 
-                    Button:
-                        text: "Gas Drops"
-                        on_release: root.open_popup_post_request(entry_content=self.text)
-                        on_press: root.get_the_time(indicator="Mylicon - Gas Drops",target=remedytime, pickle_file_name='remedy_time.pkl')
-                        on_press: root.tally_count(pickle_file_name= "remedies_count.pkl")
-                    Button:
-                        text: "Gripe Water"
-                        on_release: root.open_popup_post_request(entry_content=self.text)
-                        on_press: root.get_the_time(indicator="Gripe Water",target=remedytime, pickle_file_name='remedy_time.pkl')
-                        on_press: root.tally_count(pickle_file_name= "remedies_count.pkl")
-                    Button:
-                        text: "Snot Sucker"
-                        on_release: root.open_popup_post_request(entry_content=self.text)
-                        on_press: root.get_the_time(indicator="Snot Sucker",target=remedytime, pickle_file_name='remedy_time.pkl')
-                        on_press: root.tally_count(pickle_file_name= "remedies_count.pkl")
-                    Button:
-                        text: "Windi"
-                        on_release: root.open_popup_post_request(entry_content=self.text)
-                        on_press: root.get_the_time(indicator="Windi",target=remedytime, pickle_file_name='remedy_time.pkl')
-                        on_press: root.tally_count(pickle_file_name= "remedies_count.pkl")
+                            Label:
 
-                FloatLayout:
+                            Label:
 
-                    Label:
-                        text: "Last Remedy Was:"
-                        pos_hint:{'x':0,'y':-.2}
-                        font_size: 20
-
-                    Label:
-                        id: remedytime
-                        on_parent: root.load_history(pickle_file_name='remedies.pkl', target=remedytime)
-                        pos_hint:{'x':0,'y':-.3}
-                        font_size: 20
-
-                    Label:
-                        text: app.time
-                        pos_hint:{'x':0.4,'y':-0.4}
-
+                            Label:
+                                font_size: 20
+                                text: app.clock_time
 
         AccordionItem:
             title: "Feeding"
             AnchorLayout:
                 anchor_x:'center'
                 GridLayout:
-                    cols: 3
-                    row_force_default: True
-                    row_default_height: 75
-                    padding:15
-                    spacing:10
-
-                    Button:
-                        text: "Start Left Breast"
-                        on_release: root.open_popup_post_request(entry_content=self.text)
-                        on_press: root.show_it(indicator="Left Breast")
-                        on_press: root.get_the_time(indicator="Left Breast",target=feedtime, pickle_file_name='feed_time.pkl')
-                        on_press: root.tally_count(pickle_file_name = "feedings.pkl")
-                        on_press: app.reset_meta_start()
-
-                    Button:
-                        text: "Start Right Breast"
-                        on_release: root.open_popup_post_request(entry_content=self.text)
-                        on_parent: root.tally_count(pickle_file_name = "feedings.pkl", tallybool=False)
-                        on_press: root.show_it(indicator="Right Breast")
-                        on_press: root.get_the_time(indicator="Right Breast",target=feedtime, pickle_file_name='feed_time.pkl')
-                        on_press: root.tally_count(pickle_file_name = "feedings.pkl")
-                        on_press: app.reset_meta_start()
-                    Button:
-                        text: "Start Bottle"
-                        on_release: root.open_popup_post_request(entry_content=self.text)
-                        on_press: root.show_it(indicator="Bottle")
-                        on_press: root.get_the_time(indicator="Bottle",target=feedtime, pickle_file_name='feed_time.pkl')
-                        on_press: root.tally_count(pickle_file_name = "feedings.pkl")
-                        on_press: app.reset_meta_start()
-
-
-                FloatLayout:
-
-                    Label:
-                        text: "Last Feeding Was:"
-                        pos_hint:{'x':0,'y':0}
-                        font_size: 20
-
-                    Label:
-                        id: feedtime
-                        on_parent: root.load_history(pickle_file_name='feed_time.pkl', target=feedtime)
-                        pos_hint:{'x':0,'y':-.1}
-                        font_size: 20
-
-                    Label:
-                        text: app.time
-                        pos_hint:{'x':0.4,'y':-0.4}
-
-                    Label:
-                        id: elapsed_meta_label
-                        text: app.elapsed_meta
-                        pos_hint:{'x':0,'y':-.2}
-                        font_size: 20
-                        markup: app.meta_markup_bool
-
-
-
-
-
-        AccordionItem:
-            title: "Changing"
-            AnchorLayout:
-                anchor_x:'center'
-                GridLayout:
                     cols: 1
-                    row_force_default: True
-                    row_default_height: 75
                     padding:15
                     spacing:10
-                    Button:
-                        text: "Diaper Change - Pee"
-                        on_release: root.open_popup_post_request(entry_content=self.text)
-                        on_parent: root.tally_count(pickle_file_name = "diapers.pkl", tallybool=False)
-                        on_press: root.get_the_time(indicator="Pee Diaper",target=changetime, pickle_file_name='change_time.pkl')
-                        on_press: root.tally_count(pickle_file_name= "diapers.pkl")
-                    Button:
-                        text: "Diaper Change - Poop"
-                        on_release: root.open_popup_post_request(entry_content=self.text)
-                        on_press: root.get_the_time(indicator="Poop Diaper",target=changetime, pickle_file_name='change_time.pkl')
-                        on_press: root.tally_count(pickle_file_name= "diapers.pkl")
-                    Button:
-                        text: "Diaper Change - Pee and Poop"
-                        on_release: root.open_popup_post_request(entry_content=self.text)
-                        on_press: root.get_the_time(indicator="Peepee Poopoo Special", target=changetime, pickle_file_name='change_time.pkl')
-                        on_press: root.tally_count(pickle_file_name= "diapers.pkl")
-                FloatLayout:
-                    Label:
-                        text: "Last Diaper Change Was:"
-                        pos_hint:{'x':0,'y':-.1}
-                        font_size: 20
-                    Label:
-                        id: changetime
-                        on_parent: root.load_history(pickle_file_name='change_time.pkl', target=changetime)
-                        pos_hint:{'x':0,'y':-.2}
-                        font_size: 20
-                        text: ""
-                    Label:
-                        text: app.time
-                        pos_hint:{'x':0.4,'y':-0.4}
+
+                    GridLayout:
+                        cols: 1
+                        padding:5
+                        spacing:5
+
+                        Button:
+                            text: "Bottle"
+                            font_size: 20
+                            on_release: root.post_data_on_open(entry_content=self.text)
+                            on_press: root.get_the_time(indicator=self.text,target=feedtime, pickle_file_name='feed_time.pkl')
+                            on_press: root.tally_count(pickle_file_name = "feedings.pkl")
+                            on_press: app.update_widget_time(k='feedtime')
+
+                        Button:
+                            text: "Solid Food"
+                            font_size: 20
+                            on_release: root.post_data_on_open(entry_content=self.text)
+                            on_press: root.get_the_time(indicator=self.text, target=feedtime, pickle_file_name='feed_time.pkl')
+                            on_press: root.tally_count(pickle_file_name = "feedings.pkl")
+                            on_press: app.update_widget_time(k='feedtime')
+
+                    GridLayout:
+                        cols: 1
+                        rows: 2
+                        padding:5
+                        spacing:5
+
+                        GridLayout:
+                            cols: 1
+                            padding:5
+                            spacing:5
+
+                            Label:
+                                text: "Last Feeding Was:"
+                                pos_hint:{'x':0,'y':0}
+                                font_size: 20
+
+                            Label:
+                                id: feedtime
+                                on_parent: root.load_history(pickle_file_name='feed_time.pkl', target=feedtime)
+                                pos_hint:{'x':0,'y':-.1}
+                                font_size: 20
+
+                            Label:
+                                id: elapsed_meta_label
+                                text: app.widget_elapsed_times['feedtime']
+                                pos_hint:{'x':0,'y':-.2}
+                                font_size: 20
+                                markup: app.meta_markup_bool
+
+                        GridLayout:
+                            cols: 3
+                            padding:5
+                            spacing:5
+
+                            Label:
+
+                            Label:
+
+                            Label:
+                                font_size: 20
+                                text: app.clock_time
+
+
+
