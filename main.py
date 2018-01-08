@@ -4,6 +4,7 @@ from Local_AppConfig import AppConfig
 from kivy.properties import StringProperty, BooleanProperty, DictProperty
 from kivy.clock import Clock
 from kivy.app import App
+import sqlite3
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from kivy.uix.button import Button
@@ -12,22 +13,24 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.core.window import Window
 
 # Provide setup for Google Forms
-import GoogleForms
+import Data_Functions
 import time
 from time import strftime
 from timeit import default_timer as timer
-from datetime import timedelta
+from datetime import timedelta, datetime
 import pickle
 
 form_url = AppConfig.form_url
 entryid_action = AppConfig.entryid_action
 entryid_local_time = AppConfig.entryid_local_time
 backup_csv = AppConfig.backup_csv
+db_conn = sqlite3.connect(AppConfig.sqlite_bd, detect_types=sqlite3.PARSE_DECLTYPES)
 log_to_google = AppConfig.log_to_google
 log_to_csv = AppConfig.log_to_csv
 log_to_pkl = AppConfig.log_to_pkl
 log_to_gui = AppConfig.log_to_gui
 log_to_tally = AppConfig.log_to_tally
+log_to_sql = AppConfig.log_to_sql
 
 
 class pop(BoxLayout):
@@ -35,15 +38,27 @@ class pop(BoxLayout):
     Window.clearcolor = (0.2, 0.21, 0.27, 1)
 
     def post_data_on_close(self, instance):
-        params = GoogleForms.params_builder(entry_ids=(entryid_action, entryid_local_time),
-                                            entry_contents=(self.but.text, strftime("%I:%M %p", time.localtime())))
-        GoogleForms.post_google_form(form_url, params, backup_csv, log_to_google)
-        self.main_pop.dismiss()
+        if log_to_google:
+            params = Data_Functions.params_builder(entry_ids=(entryid_action, entryid_local_time),
+                                                   entry_contents=(self.but.text, strftime("%I:%M %p", time.localtime())))
+            Data_Functions.post_google_form(form_url, params, backup_csv)
+            self.main_pop.dismiss()
+        else:
+            print("Entry Not Logged to Google")
 
     def post_data_on_open(self, entry_content):
-        params = GoogleForms.params_builder(entry_ids=(entryid_action, entryid_local_time),
-                                            entry_contents=(entry_content, strftime("%I:%M %p", time.localtime())))
-        GoogleForms.post_google_form(form_url, params, backup_csv, log_to_google)
+        if log_to_google:
+            params = Data_Functions.params_builder(entry_ids=(entryid_action, entryid_local_time),
+                                                   entry_contents=(entry_content, strftime("%I:%M %p", time.localtime())))
+            Data_Functions.post_google_form(form_url, params, backup_csv)
+        else:
+            print("Entry Not Logged To Google")
+
+        if log_to_sql:
+            c = db_conn.cursor()
+            c.execute('INSERT INTO logs VALUES (?, ?, ?)', (None, datetime.now(), entry_content))
+            db_conn.commit()
+
 
     def close_popup(self, instance):
         self.info_popup.dismiss()
@@ -102,8 +117,30 @@ class PopApp(App):
     start_time = StringProperty()
     widget_open_times = DictProperty({'medtime': 0, 'feedtime': 0})
     widget_elapsed_times = DictProperty({'medtime': '0', 'feedtime': '(0:00:00)'})
+    last_logs = DictProperty({0: '', 1: '', 2: '', 3: '', 4: ''})
     elapsed_meta = StringProperty()
     meta_markup_bool = BooleanProperty()
+
+    def setup_db(self, *args):
+        # Creates the SQL Table if does not exist
+        c = db_conn.cursor()
+        c.execute('''CREATE TABLE IF NOT EXISTS logs 
+                            (EntryID INTEGER PRIMARY KEY,
+                            Time TIMESTAMP,
+                            Action TEXT)''')
+        db_conn.commit()
+
+    def fetch_last_n(self, n=5, *args):
+        # Query SQL DB for last ten entries
+        c = db_conn.cursor()
+        c.execute('SELECT * from logs ORDER BY Time DESC LIMIT 5')
+        last_n = c.fetchall()
+        for index, lt in enumerate(last_n):
+            clock_time = lt[1].strftime("%I:%M %p")
+            day = lt[1].strftime("%b-%d")
+            action = lt[2]
+            entry = "{} --- {} ({})".format(action, clock_time, day)
+            self.last_logs[index] = entry
 
     def update(self, *args):
         self.clock_time = strftime("%I:%M:%S %p", time.localtime())
@@ -124,9 +161,10 @@ class PopApp(App):
 
 
     def build(self):
-
+        self.setup_db()
         Clock.schedule_interval(self.update, 0.1)
         Clock.schedule_interval(self.get_elapsed_widget_time, 0.1)
+        Clock.schedule_interval(self.fetch_last_n, 5)
         return pop()
 
 
