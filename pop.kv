@@ -72,6 +72,22 @@
                             on_press: root.tally_count(pickle_file_name= "med_count.pkl")
                             on_press: app.update_widget_time(k='medtime')
 
+                        Button:
+                            text: "Probiotic"
+                            font_size:20
+                            on_release: root.post_data_on_open(entry_content=self.text)
+                            on_press: root.get_the_time(indicator=self.text, target=medtime, pickle_file_name='med_time.pkl')
+                            on_press: root.tally_count(pickle_file_name= "med_count.pkl")
+                            on_press: app.update_widget_time(k='medtime')
+
+                        Button:
+                            text: "Other OTC"
+                            font_size:20
+                            on_release: root.post_data_on_open(entry_content=self.text)
+                            on_press: root.get_the_time(indicator=self.text, target=medtime, pickle_file_name='med_time.pkl')
+                            on_press: root.tally_count(pickle_file_name= "med_count.pkl")
+                            on_press: app.update_widget_time(k='medtime')
+
                     GridLayout:
                         cols: 1
                         rows: 2
