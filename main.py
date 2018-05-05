@@ -5,10 +5,6 @@ from kivy.properties import StringProperty, BooleanProperty, DictProperty
 from kivy.clock import Clock
 from kivy.app import App
 import sqlite3
-from kivy.uix.popup import Popup
-from kivy.uix.label import Label
-from kivy.uix.button import Button
-from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.core.window import Window
 
@@ -157,8 +153,6 @@ class PopApp(App):
             elapsed_time = int(elapsed_time)
             formatted_time = timedelta(seconds=elapsed_time)
             self.widget_elapsed_times[k] = "({})".format(str(formatted_time))
-
-
 
     def build(self):
         self.setup_db()
