@@ -159,6 +159,7 @@ class PopApp(App):
         Clock.schedule_interval(self.update, 0.1)
         Clock.schedule_interval(self.get_elapsed_widget_time, 0.1)
         Clock.schedule_interval(partial(self.fetch_last_n, 10), 10)
+        self.fetch_last_n(top_n=10)
         return pop()
 
 
