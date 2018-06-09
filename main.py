@@ -15,6 +15,7 @@ from time import strftime
 from timeit import default_timer as timer
 from datetime import timedelta, datetime
 import pickle
+from functools import partial
 
 form_url = AppConfig.form_url
 entryid_action = AppConfig.entryid_action
@@ -112,7 +113,7 @@ class PopApp(App):
     start_time = StringProperty()
     widget_open_times = DictProperty({'medtime': 0, 'feedtime': 0})
     widget_elapsed_times = DictProperty({'medtime': '0', 'feedtime': '(0:00:00)'})
-    last_logs = DictProperty({0: '', 1: '', 2: '', 3: '', 4: ''})
+    last_logs = DictProperty({k: '' for k in range(10)})
     elapsed_meta = StringProperty()
     meta_markup_bool = BooleanProperty()
 
@@ -125,10 +126,10 @@ class PopApp(App):
                             Action TEXT)''')
         db_conn.commit()
 
-    def fetch_last_n(self, n=5, *args):
+    def fetch_last_n(self, top_n, *largs):
         # Query SQL DB for last ten entries
         c = db_conn.cursor()
-        c.execute('SELECT * from logs ORDER BY Time DESC LIMIT 5')
+        c.execute('SELECT * from logs ORDER BY Time DESC LIMIT {}'.format(top_n))
         last_n = c.fetchall()
         for index, lt in enumerate(last_n):
             clock_time = lt[1].strftime("%I:%M %p")
@@ -157,7 +158,7 @@ class PopApp(App):
         self.setup_db()
         Clock.schedule_interval(self.update, 0.1)
         Clock.schedule_interval(self.get_elapsed_widget_time, 0.1)
-        Clock.schedule_interval(self.fetch_last_n, 5)
+        Clock.schedule_interval(partial(self.fetch_last_n, 10), 10)
         return pop()
 
 

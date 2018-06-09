@@ -10,5 +10,5 @@ class AppConfig(object):
     log_to_pkl = False
     log_to_gui = False
     log_to_tally = False
-    log_to_sql = False
+    log_to_sql = True
 
