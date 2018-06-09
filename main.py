@@ -20,7 +20,7 @@ form_url = AppConfig.form_url
 entryid_action = AppConfig.entryid_action
 entryid_local_time = AppConfig.entryid_local_time
 backup_csv = AppConfig.backup_csv
-db_conn = sqlite3.connect(AppConfig.sqlite_bd, detect_types=sqlite3.PARSE_DECLTYPES)
+db_conn = sqlite3.connect(AppConfig.sqlite_db, detect_types=sqlite3.PARSE_DECLTYPES)
 log_to_google = AppConfig.log_to_google
 log_to_csv = AppConfig.log_to_csv
 log_to_pkl = AppConfig.log_to_pkl
@@ -54,7 +54,6 @@ class pop(BoxLayout):
             c = db_conn.cursor()
             c.execute('INSERT INTO logs VALUES (?, ?, ?)', (None, datetime.now(), entry_content))
             db_conn.commit()
-
 
     def close_popup(self, instance):
         self.info_popup.dismiss()
