@@ -1,6 +1,6 @@
 import kivy
 kivy.require('1.10.0')
-from Local_AppConfig import AppConfig
+from Local_AppConfig import AppConfig, ApiConfig
 from kivy.properties import StringProperty, BooleanProperty, DictProperty
 from kivy.clock import Clock
 from kivy.app import App
@@ -15,18 +15,21 @@ from time import strftime
 from timeit import default_timer as timer
 from datetime import timedelta, datetime
 import pickle
+from functools import partial
 
 form_url = AppConfig.form_url
 entryid_action = AppConfig.entryid_action
 entryid_local_time = AppConfig.entryid_local_time
 backup_csv = AppConfig.backup_csv
-db_conn = sqlite3.connect(AppConfig.sqlite_bd, detect_types=sqlite3.PARSE_DECLTYPES)
+db_conn = sqlite3.connect(AppConfig.sqlite_db, detect_types=sqlite3.PARSE_DECLTYPES)
 log_to_google = AppConfig.log_to_google
 log_to_csv = AppConfig.log_to_csv
 log_to_pkl = AppConfig.log_to_pkl
 log_to_gui = AppConfig.log_to_gui
 log_to_tally = AppConfig.log_to_tally
 log_to_sql = AppConfig.log_to_sql
+api_key = ApiConfig.api_key
+city_id = ApiConfig.city_id
 
 
 class pop(BoxLayout):
@@ -54,7 +57,6 @@ class pop(BoxLayout):
             c = db_conn.cursor()
             c.execute('INSERT INTO logs VALUES (?, ?, ?)', (None, datetime.now(), entry_content))
             db_conn.commit()
-
 
     def close_popup(self, instance):
         self.info_popup.dismiss()
@@ -111,11 +113,15 @@ class pop(BoxLayout):
 class PopApp(App):
     clock_time = StringProperty()
     start_time = StringProperty()
+    weather = StringProperty()
     widget_open_times = DictProperty({'medtime': 0, 'feedtime': 0})
     widget_elapsed_times = DictProperty({'medtime': '0', 'feedtime': '(0:00:00)'})
-    last_logs = DictProperty({0: '', 1: '', 2: '', 3: '', 4: ''})
+    last_logs = DictProperty({k: '' for k in range(10)})
     elapsed_meta = StringProperty()
     meta_markup_bool = BooleanProperty()
+
+    def get_the_weather(self, *args):
+        self.weather = Data_Functions.fetch_weather(city_id, api_key)
 
     def setup_db(self, *args):
         # Creates the SQL Table if does not exist
@@ -126,10 +132,10 @@ class PopApp(App):
                             Action TEXT)''')
         db_conn.commit()
 
-    def fetch_last_n(self, n=5, *args):
+    def fetch_last_n(self, top_n, *largs):
         # Query SQL DB for last ten entries
         c = db_conn.cursor()
-        c.execute('SELECT * from logs ORDER BY Time DESC LIMIT 5')
+        c.execute('SELECT * from logs ORDER BY Time DESC LIMIT {}'.format(top_n))
         last_n = c.fetchall()
         for index, lt in enumerate(last_n):
             clock_time = lt[1].strftime("%I:%M %p")
@@ -156,9 +162,12 @@ class PopApp(App):
 
     def build(self):
         self.setup_db()
+        self.get_the_weather()
         Clock.schedule_interval(self.update, 0.1)
         Clock.schedule_interval(self.get_elapsed_widget_time, 0.1)
-        Clock.schedule_interval(self.fetch_last_n, 5)
+        Clock.schedule_interval(partial(self.fetch_last_n, 10), 10)
+        Clock.schedule_interval(self.get_the_weather, 1800)
+        self.fetch_last_n(top_n=10)
         return pop()
 
 
