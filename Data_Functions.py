@@ -34,6 +34,7 @@ def parse_weather_response(json_response):
     # Get the current temperature
     try:
         current_temp = json_response['main']['temp']
+        current_temp = "{:.2n}".format(current_temp)
     except KeyError:
         current_temp = "?"
 
